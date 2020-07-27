@@ -1,0 +1,4 @@
+.vagrant
+.idea
+html/node_modules
+html/users.json

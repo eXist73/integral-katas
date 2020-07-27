@@ -1,0 +1,17 @@
+{
+  "name": "integral-test-katas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "format": "prettier --write ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^26.1.0",
+    "prettier": "^2.0.5"
+  }
+}

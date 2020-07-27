@@ -1,0 +1,14 @@
+{
+  "alice" : {
+    "timeline" : [],
+    "following" : []
+  },
+  "bob" : {
+    "timeline" : [],
+    "following" : []
+  },
+  "charlie" : {
+    "timeline" : [],
+    "following" : []
+  }
+}
