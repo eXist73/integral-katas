@@ -1,4 +1,5 @@
 var fs = require('fs');
+var moment = require('moment');
 
 /**
  * Resets our "database" to the initial setup
@@ -39,29 +40,44 @@ function writeUsersDatabase(data)
  * @param message
  * @returns {*}
  */
-function publishToTimeline(username, message)
+function publishToTimeline(username, message, time_ago)
 {
     let data = readUsersDatabase();
 
     var timeline_obj = {};
     timeline_obj['message'] = message;
-    timeline_obj['timestamp'] = Date.now();
+    timeline_obj['timestamp'] = time_ago !== null ? time_ago : Date.now();
 
     data[username].timeline.unshift(timeline_obj);
     writeUsersDatabase(data);
-    return data[username].timeline;
+    return viewTimeline(username);
 }
 
 /**
  * Return the timeline
  *
  * @param username
+ * @param date
  * @returns {*}
  */
-function viewTimeline(username)
+function viewTimeline(username, date)
 {
     let data = readUsersDatabase();
-    return data[username].timeline;
+    var timeline = data[username].timeline;
+    var final = [];
+
+    // If no date is passed, assume now
+    if(date === undefined)
+        date = Date.now();
+
+    for (const item of timeline)
+    {
+        var time_ago = moment(item.timestamp).from(date);
+        item.message = item.message + ' (' + time_ago + ')';
+        final.push(item);
+    }
+
+    return final;
 }
 
 /**
@@ -102,10 +118,14 @@ function viewFollowing(username)
  *
  * @param username
  */
-function viewWall(username)
+function viewWall(username, date)
 {
+    // If no date is passed, assume now
+    if(date === undefined)
+        date = Date.now();
+
     // Get current users timeline, and will add their messages to anyone they follow next
-    let wall = viewTimeline(username);
+    let wall = viewTimeline(username, date);
 
     // If we have follows, add to wall
     let following = viewFollowing(username);
@@ -114,7 +134,7 @@ function viewWall(username)
         // Get each person we are following and
         for (const followee of following)
         {
-            let other_timeline = viewTimeline(followee);
+            let other_timeline = viewTimeline(followee, date);
             Array.prototype.push.apply(wall, other_timeline);
         }
 
